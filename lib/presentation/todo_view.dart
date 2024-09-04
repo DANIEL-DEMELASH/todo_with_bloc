@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo_with_bloc/presentation/new_todo.dart';
 import 'package:todo_with_bloc/presentation/todo_cubit.dart';
 
 import '../domain/models/todo.dart';
@@ -7,31 +8,31 @@ import '../domain/models/todo.dart';
 class TodoView extends StatelessWidget {
   const TodoView({super.key});
   
-  void _showAddTodoBox(BuildContext context){
-    final todoCubit = context.read<TodoCubit>();
-    final textController = TextEditingController();
+  // void _showAddTodoBox(BuildContext context){
+  //   final todoCubit = context.read<TodoCubit>();
+  //   final textController = TextEditingController();
     
-    showDialog(
-      context: context, 
-      builder: (context) => AlertDialog(
-        title: const Text('New Todo'),
-        content: TextField(
-          controller: textController,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context), 
-            child: const Text('Cancel')),
-          TextButton(
-            onPressed: () {
-              todoCubit.addTodo(textController.text);
-              Navigator.pop(context);
-            }, 
-            child: const Text('Save')),
-        ],
-      )
-    );
-  }
+  //   showDialog(
+  //     context: context, 
+  //     builder: (context) => AlertDialog(
+  //       title: const Text('New Todo'),
+  //       content: TextField(
+  //         controller: textController,
+  //       ),
+  //       actions: [
+  //         TextButton(
+  //           onPressed: () => Navigator.pop(context), 
+  //           child: const Text('Cancel')),
+  //         TextButton(
+  //           onPressed: () {
+  //             todoCubit.addTodo(textController.text);
+  //             Navigator.pop(context);
+  //           }, 
+  //           child: const Text('Save')),
+  //       ],
+  //     )
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +41,14 @@ class TodoView extends StatelessWidget {
       backgroundColor: Colors.white,
       
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddTodoBox(context),
+        // onPressed: () => _showAddTodoBox(context),
+        onPressed: () {
+          Navigator.push(
+            context, MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (context) => todoCubit,
+                child: NewTodoScreen())));
+        },
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(50)
         ),
@@ -51,7 +59,6 @@ class TodoView extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Todo with BloC'),
         backgroundColor: Colors.white,
-        elevation: 4,
       ),
       
       body: BlocBuilder<TodoCubit, List<Todo>>(
